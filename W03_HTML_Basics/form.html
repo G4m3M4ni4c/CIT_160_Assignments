@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!--Don't highlight links if they belong to the .link-unstyled class-->
+    <style>
+        .link-unstyled,
+        .link-unstyled:link,
+        .link-unstyled:hover {
+            color: inherit;
+            text-decoration: inherit;
+        }
+    </style>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Newsletter - Pypp Dream</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <a href="business.html" class="link-unstyled">
+                <strong>Pypp Dream</strong>
+                <h1>Newsletter Sign-Up</h1>
+            </a>
+        </div>
+    </div>
+    <div class="container-md">
+        <div class="mb-3">
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" placeholder="Enter name" id="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" placeholder="Enter email" id="email" class="form-control">
+            </div>
+            <button type="button" onclick="submitForm()" class="btn btn-primary">Subscribe</button>
+        </div>
+        <div id="formEnd"></div>
+    </div>
+    <script>
+        function submitForm() {
+            let name = $('#name').val()
+            let email = $('#email').val()
+            let validName = Boolean(name)
+            let validEmail = email && /[^@]+@[^@]+/.test(email)
+
+            if (validName) $('#name').removeClass('is-invalid')
+            else $('#name').addClass('is-invalid')
+
+            if (validEmail) $('#email').removeClass('is-invalid')
+            else $('#email').addClass('is-invalid')
+
+            if (validName && validEmail) showSuccess()
+        }
+
+        function showSuccess() {
+            $(`
+                <div id="successMsg" class="alert alert-success alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Thank you for subscribing to our newsletter!
+                </div>
+            `)
+                .hide()
+                .prependTo('#formEnd')
+                .slideDown(200)
+        }
+    </script>
+</body>
+
+</html>
