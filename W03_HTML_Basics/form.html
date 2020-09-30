@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -11,16 +11,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!--Don't highlight links if they belong to the .link-unstyled class-->
-    <style>
-        .link-unstyled,
-        .link-unstyled:link,
-        .link-unstyled:hover {
-            color: inherit;
-            text-decoration: inherit;
-        }
-    </style>
 
     <meta name="author" content="Jonathan Henson">
     <title>Newsletter - Pypp Dream</title>
@@ -37,7 +27,6 @@
     </div>
     <div class="container-md">
         <div class="mb-3">
-
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" placeholder="Enter name" id="name" class="form-control">
@@ -54,16 +43,14 @@
         function submitForm() {
             let name = $('#name').val()
             let email = $('#email').val()
-            let validName = Boolean(name)
-            let validEmail = email && /[^@]+@[^@]+/.test(email)
 
-            if (validName) $('#name').removeClass('is-invalid')
+            if (name) $('#name').removeClass('is-invalid')
             else $('#name').addClass('is-invalid')
 
-            if (validEmail) $('#email').removeClass('is-invalid')
+            if (email && /[^@]+@[^@]+/.test(email)) $('#email').removeClass('is-invalid')
             else $('#email').addClass('is-invalid')
 
-            if (validName && validEmail) showSuccess()
+            if (name && email) showSuccess()
         }
 
         function showSuccess() {
@@ -73,11 +60,19 @@
                     Thank you for subscribing to our newsletter!
                 </div>
             `)
-                .hide()
-                .prependTo('#formEnd')
-                .slideDown(200)
+            .hide()
+            .prependTo('#formEnd')
+            .slideDown(200)
         }
     </script>
+    <style>
+        .link-unstyled,
+        .link-unstyled:link,
+        .link-unstyled:hover {
+            color: inherit;
+            text-decoration: inherit;
+        }
+    </style>
 </body>
 
 </html>
