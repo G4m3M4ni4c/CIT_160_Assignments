@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Template Title</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Template Heading</h1>
+        </div>
+    </div>
+    <div class="container-md">
+        <div class="mb-3">
+            <div class="form-group">
+                <label for="name">Input 1:</label>
+                <input type="text" placeholder="One" id="inputOne" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="email">Input 2:</label>
+                <input type="email" placeholder="Two" id="inputTwo" class="form-control">
+            </div>
+            <button type="button" onclick="submitForm()" class="btn btn-primary">Submit</button>
+        </div>
+        <div id="formEnd"></div>
+    </div>
+</body>
+
+</html>

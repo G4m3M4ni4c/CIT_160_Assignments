@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        /* Defining Table
+         * Input: A person's name
+         * Processing: Create a verse of scripture for that person
+         * Output: The scripture
+         */
+        function applyScripture() {
+            // Get the user's name from the text field that has the id
+            // of "nameInput" and store it in a variable named name.
+            let name = document.getElementById('nameInput').value;
+            if (!name) name = 'you'
+
+            // Use string concatenation to create a verse
+            // of scripture personalized for the user.
+            let scripture = `<p><b>12</b> For <b>${name}</b> shall go out with joy, and be led forth with peace: ` +
+                `the mountains and the hills shall break forth before you into singing, ` +
+                `and all the trees of the field shall clap their hands.</p>`;
+
+            // Display the scripture in the div that has the id "output".
+            document.getElementById('output').innerHTML = scripture;
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Applied Scripture</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="text-center">Isiah 56:12</h1>
+        </div>
+    </div>
+    <div class="container-md">
+        <div class="form-group">
+            <label for="nameInput">Enter your name:</label>
+            <input type="text" placeholder="Enter name" id="nameInput" class="form-control">
+        </div>
+        <button type="button" onclick="applyScripture()" class="btn btn-primary">Apply Name</button>
+        <hr>
+        <div id="output"></div>
+    </div>
+</body>
+
+</html>

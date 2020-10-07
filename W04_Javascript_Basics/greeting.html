@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!--Download handwriting font (using google fonts)-->
+    <link href='https://fonts.googleapis.com/css?family=Handlee' rel='stylesheet'>
+    <style>
+        /* Use to make text look like handwriting */
+        .hand-writing {
+            font-family: 'Handlee';
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        /* Use to set the bckground to look like paper */
+        .background-paper {
+            background-image: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ed73de0b-a699-4b56-b3af-79b9781e8ab4/d5hb4ji-0752cfb0-a46a-40d7-aea7-15b6a29b3552.jpg/v1/fill/w_1024,h_1473,q_75,strp/old_paper_00078_by_trug_bild-d5hb4ji.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwic3ViIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl0sIm9iaiI6W1t7InBhdGgiOiIvZi9lZDczZGUwYi1hNjk5LTRiNTYtYjNhZi03OWI5NzgxZThhYjQvZDVoYjRqaS0wNzUyY2ZiMC1hNDZhLTQwZDctYWVhNy0xNWI2YTI5YjM1NTIuanBnIiwid2lkdGgiOiI8PTEwMjQiLCJoZWlnaHQiOiI8PTE0NzMifV1dfQ.JxGY5DIlcDuQPSCUZR7iG8jJ4SqS8jQHZBVzAQHZmas");
+            min-height: 100%;
+            height: 100%;
+        }
+
+        .blank-line {
+            border-bottom: 3px solid black;
+            min-width: 5em;
+        }
+
+        #paper {
+            padding: 2em;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #2b1d0e;
+        }
+    </style>
+
+    <script>
+        /* Defining Table
+         * Input: A person's name
+         * Processing: Create a greeting for that person
+         * Output: The greeting
+         */
+        function greetUser() {
+            // This line prompts the user to type in his name.
+            let name = prompt("Enter your full name");
+
+            // Create a personalized greeting for the user.
+            let greeting = `hello ${name} . my name is Tom Riddle`;
+
+            // Sets the button text to the entered name
+            document.getElementById('name-button').innerHTML = name;
+            document.getElementById('name-button').classList.remove('blank-line')
+
+            // The next 2 lines causes the computer to display
+            // a greeting to the user by typing it into the <p>
+            // with id="riddle"
+            document.getElementById('riddle').innerHTML = ''
+            typeMessage('riddle', greeting, 100);
+        }
+
+        /* Defining Table
+         * Input:
+         *   elementId: The id of the element to type the text
+         *   message: The message to type
+         *   delay: the time between letters types in hundreths of seconds
+         * 
+         * Processing: Concatenates the first character of the message to
+         *   the element, then schedules the rest of the message to be
+         *   typed out after a delay
+         * 
+         * Output: The message appears to be typed out by some paranormal
+         *   being
+         */
+        function typeMessage(elementId, message, delay) {
+            if (typeof message === 'string' && message) {
+                document.getElementById(elementId).innerHTML += message[0]
+                setTimeout(() => typeMessage(elementId, message.substr(1), delay), delay)
+            }
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Magical Diary</title>
+</head>
+
+<body>
+    <div id="paper" class="container-md background-paper hand-writing">
+        <p>
+            My name is <button type="button" onclick="greetUser()" id="name-button"
+                class="btn blank-line hand-writing"></button>
+        </p>
+        <p id="riddle"></p>
+    </div>
+</body>
+
+</html>
