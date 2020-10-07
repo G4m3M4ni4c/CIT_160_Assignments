@@ -56,11 +56,11 @@
          */
         function greetUser() {
             // This line prompts the user to type in his name.
-            let name = prompt("Enter your full name");
-            if (!name) name = "Harry Potter"
+            let name = prompt("Enter your full name")
+            if (!name) return
 
             // Create a personalized greeting for the user.
-            let greeting = `hello ${name} , my name is Tom Riddle`;
+            let greeting = `hello ${name} , my name is Tom Riddle`
 
             // Sets the button text to the entered name
             document.getElementById('name-button').innerHTML = name;
