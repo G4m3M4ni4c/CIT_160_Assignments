@@ -57,9 +57,10 @@
         function greetUser() {
             // This line prompts the user to type in his name.
             let name = prompt("Enter your full name");
+            if (!name) name = "Harry Potter"
 
             // Create a personalized greeting for the user.
-            let greeting = `hello ${name} . my name is Tom Riddle`;
+            let greeting = `hello ${name} , my name is Tom Riddle`;
 
             // Sets the button text to the entered name
             document.getElementById('name-button').innerHTML = name;
@@ -101,7 +102,8 @@
     <div id="paper" class="container-md background-paper hand-writing">
         <p>
             My name is <button type="button" onclick="greetUser()" id="name-button"
-                class="btn blank-line hand-writing"></button>
+                class="btn text-left blank-line hand-writing"
+                style="padding-left: 0;"></button>
         </p>
         <p id="riddle"></p>
     </div>
