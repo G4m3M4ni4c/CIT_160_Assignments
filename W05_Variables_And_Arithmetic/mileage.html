@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        /* Defining Table
+         * Input: A string to be validated
+         * Processing: Checks if the string can be parsed as a valid positibe number
+         * Output: True or False
+         */
+        function isInvalidNumber(numText) {
+            return isNaN(numText) || numText.startsWith('-')
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Checks if the text input is a valid positive number
+         * Output: Displays an error message and highlights the text box if invalid,
+         *         else removes error text and highlighting
+         */
+        function validateNumberInput(id) {
+            const invalidMessage = $(`#${id}InvalidMessage`)
+            const inputBox = $(`#${id}`)
+            const inputText = inputBox.val().trim()
+
+            if (isInvalidNumber(inputText)) {
+                inputBox.addClass('is-invalid')
+                invalidMessage.prop('hidden', false)
+                return;
+            }
+            invalidMessage.prop('hidden', true)
+            inputBox.removeClass('is-invalid')
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Parses the value of the input box as a number
+         * Output: If the number is valid, return the parsed number,
+         *         else return null
+         */
+        function getNumberInput(id) {
+            const inputText = $(`#${id}`).val().trim()
+            if (isInvalidNumber(inputText)) return null
+            return inputText ? parseFloat(inputText) : 0
+        }
+
+        /* Defining Table
+         * Input: An error message
+         * Output: Highlights the mileage box red and displays
+         *         an error message
+         */
+        function mileageError(message) {
+            const mileageBox = $('#mileage')
+            mileageBox.addClass('is-invalid')
+            mileageBox.val('Error')
+
+            const mileageErrorBox = $('#mileageInvalidMessage')
+            mileageErrorBox.prop('hidden', false)
+            mileageErrorBox.html(message)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - Inital Odometer Reading  (number | null)
+         *     - Final Odometer Reading   (number | null)
+         *     - Gasoline Used in Gallons (number | null)
+         * Processing:
+         *     - Validates that the inputs are valid, and shows an error
+         *         if they are invalid
+         *     - Calculates Mileage in Miles per Gallon
+         * Output:
+         *     - Shows the Mileage as Miles per Gallon in the Mileage
+         *       text box
+         */
+        function calculateMileage() {
+            const mileageBox = $('#mileage')
+
+            const initialMiles = getNumberInput('initialMiles')
+            const finalMiles = getNumberInput('finalMiles')
+            const gallons = getNumberInput('gallons')
+
+            if (initialMiles === null || finalMiles === null || gallons === null) {
+                mileageError('Inputs are invalid')
+                return
+            }
+            if (initialMiles > finalMiles) {
+                mileageError('Final Odometer Reading cannot be less than Initial Odometer Reading')
+                return
+            }
+            if (gallons == 0) {
+                mileageError('Gasoline Used cannot be 0')
+                return
+            }
+            mileageBox.removeClass('is-invalid')
+            $('#mileageInvalidMessage').prop('hidden', true)
+
+            const mileage = (finalMiles - initialMiles) / gallons
+            mileageBox.val(mileage)
+        }
+
+        /* Defining Table
+         * Input: N/A
+         * Processing: N/A
+         * Output: Resets the form inputs
+         */
+        function reset() {
+            $('#initialMiles').val('')
+            $('#finalMiles').val('')
+            $('#gallons').val('')
+            validateNumberInput('initialMiles')
+            validateNumberInput('finalMiles')
+            validateNumberInput('gallons')
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Template Title</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Calculate Mileage</h1>
+        </div>
+    </div>
+    <div class="container-md">
+        <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
+            <div class="form-group">
+                <label for="initialMilesInput">Initial Odometer Reading:</label>
+                <div class="input-group" id="initialMilesInput">
+                    <input type="text" placeholder="0" oninput="validateNumberInput('initialMiles')" id="initialMiles"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">miles</span>
+                    </div>
+                </div>
+                <small id="initialMilesInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="finalMilesInput">Final Odometer Reading:</label>
+                <div class="input-group" id="finalMilesInput">
+                    <input type="text" placeholder="0" oninput="validateNumberInput('finalMiles')" id="finalMiles"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">Miles</span>
+                    </div>
+                </div>
+                <small id="finalMilesInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="gallonsInput">Gasoline Used:</label>
+                <div class="input-group" id="gallonsInput">
+                    <input type="text" placeholder="0" oninput="validateNumberInput('gallons')" id="gallons"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">Gallons</span>
+                    </div>
+                </div>
+                <small id="gallonsInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="clearfix">
+                <button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
+                <button type="button" onclick="calculateMileage()" class="btn btn-primary float-right">Calculate Mileage</button>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="mileageOutput">Mileage:</label>
+                <div class="input-group" id="mileageOutput">
+                    <input type="text" placeholder="0" id="mileage" disabled class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">Miles per Gallon</span>
+                    </div>
+                </div>
+                <small id="mileageInvalidMessage" class="text-danger" hidden>
+                    Error: No Error
+                </small>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

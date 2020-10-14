@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const QUARTS_TO_LITERS_RATE = 1.137
+
+        /* Defining Table
+         * Input:
+         *  - sourceId: Id Attribute for the Source text input box
+         *  - targetId: Id Attribute for the Target text input box
+         *  - toLiters: If the covertion should be to Liters
+         * Processing:
+         *  - Checks if the Source textbox value is a valid number
+         *  - If the Source input value is valid, calculate the
+         *     coversion:
+         *    - If the calculation is to liter, use the contant
+         *       conversion rate for quarts to liters, otherwise use
+         *       the reciprocal.
+         *    - Multiply the Source input number by the conversion
+         *       rate to get the new Target number.
+         * Output:
+         *  - If the Source textbox value is invalid, show an error
+         *     message and highlight the input box, otherwise hide the
+         *     message and clear the highlighting.
+         *  - If the Source textbox value is invalid, set the Target
+         *     textbox value to "Error", otherwise display the new Target
+         *     number in the Target textbox.
+         */
+        function convert(sourceId, targetId, toLiters = true) {
+            const invalidMessage = $(`#${sourceId}InvalidMessage`)
+            const sourceInput = $(`#${sourceId}`)
+            const targetInput = $(`#${targetId}`)
+            const sourceValText = sourceInput.val().trim()
+
+            if (isNaN(sourceValText)) {
+                sourceInput.addClass('is-invalid')
+                invalidMessage.prop('hidden', false)
+                targetInput.val('ERROR')
+                return;
+            }
+            invalidMessage.prop('hidden', true)
+            sourceInput.removeClass('is-invalid')
+
+            const sourceVal = sourceValText ? parseFloat(sourceValText) : 0
+            const convertRate = toLiters ? QUARTS_TO_LITERS_RATE : (1 / QUARTS_TO_LITERS_RATE)
+            const targetVal = sourceVal * convertRate
+
+            if (targetVal) targetInput.val(targetVal)
+            else targetInput.val('')
+        }
+
+        /* Defining Table
+         * Input: N/A
+         * Processing: N/A
+         * Output: Resets the form inputs
+         */
+        function reset() {
+            $('#quarts').val('')
+            $('#liters').val('')
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Template Title</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Imperial Quarts / Liters Conversion</h1>
+        </div>
+    </div>
+    <div class="container-md">
+        <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
+            <div class="form-group">
+                <label for="quartsInput">Imperial Quarts:</label>
+                <div class="input-group" id="quartsInput">
+                    <input type="text" placeholder="0" oninput="convert('quarts', 'liters')" id="quarts"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text">qt</span>
+                    </div>
+                </div>
+                <small id="quartsInvalidMessage" class="text-danger" hidden>
+                    Must be a number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="litersInput">Liters:</label>
+                <div class="input-group" id="litersInput">
+                    <input type="text" placeholder="0" oninput="convert('liters', 'quarts', toLiters=false)" id="liters"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text">L</span>
+                    </div>
+                </div>
+                <small id="litersInvalidMessage" class="text-danger" hidden>
+                    Must be a number!
+                </small>
+            </div>
+            <button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
+        </div>
+    </div>
+</body>
+
+</html>
