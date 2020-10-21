@@ -41,8 +41,11 @@
             const invalidMessage = $(`#${sourceId}InvalidMessage`)
             const sourceInput = $(`#${sourceId}`)
             const targetInput = $(`#${targetId}`)
+
+            // Get source value from source input
             const sourceValText = sourceInput.val().trim()
 
+            // Validate source value
             if (isNaN(sourceValText)) {
                 sourceInput.addClass('is-invalid')
                 invalidMessage.prop('hidden', false)
@@ -52,11 +55,13 @@
             invalidMessage.prop('hidden', true)
             sourceInput.removeClass('is-invalid')
 
-            const sourceVal = sourceValText ? parseFloat(sourceValText) : 0
+            // Parse and convert source value to target value
+            const sourceVal = sourceValText ? Number(sourceValText) : 0
             const convertRate = toLiters ? QUARTS_TO_LITERS_RATE : (1 / QUARTS_TO_LITERS_RATE)
             const targetVal = sourceVal * convertRate
 
-            if (targetVal) targetInput.val(targetVal)
+            // Insert taget value (to 2 d.p.) into target input
+            if (targetVal) targetInput.val(targetVal.toFixed(3))
             else targetInput.val('')
         }
 
@@ -72,20 +77,20 @@
     </script>
 
     <meta name="author" content="Jonathan Henson">
-    <title>Template Title</title>
+    <title>Quarts to Liters</title>
 </head>
 
 <body>
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
+    <div class="jumbotron jumbotron-fluid" style="background-color: #f4a261;">
+        <div class="container text-center">
             <h1>Imperial Quarts / Liters Conversion</h1>
         </div>
     </div>
-    <div class="container-md">
+    <div class="container-md d-flex justify-content-center">
         <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
             <div class="form-group">
-                <label for="quartsInput">Imperial Quarts:</label>
-                <div class="input-group" id="quartsInput">
+                <label for="quarts">Imperial Quarts:</label>
+                <div class="input-group">
                     <input type="text" placeholder="0" oninput="convert('quarts', 'liters')" id="quarts"
                         class="form-control">
                     <div class="input-group-append">
@@ -97,8 +102,8 @@
                 </small>
             </div>
             <div class="form-group">
-                <label for="litersInput">Liters:</label>
-                <div class="input-group" id="litersInput">
+                <label for="liters">Liters:</label>
+                <div class="input-group">
                     <input type="text" placeholder="0" oninput="convert('liters', 'quarts', toLiters=false)" id="liters"
                         class="form-control">
                     <div class="input-group-append">
@@ -109,7 +114,7 @@
                     Must be a number!
                 </small>
             </div>
-            <button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
+            <button type="button" onclick="reset()" class="btn btn-outline-dark">Reset</button>
         </div>
     </div>
 </body>

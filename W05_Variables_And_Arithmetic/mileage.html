@@ -15,7 +15,7 @@
     <script>
         /* Defining Table
          * Input: A string to be validated
-         * Processing: Checks if the string can be parsed as a valid positibe number
+         * Processing: Checks if the string can be parsed as a valid positive number
          * Output: True or False
          */
         function isInvalidNumber(numText) {
@@ -31,6 +31,7 @@
         function validateNumberInput(id) {
             const invalidMessage = $(`#${id}InvalidMessage`)
             const inputBox = $(`#${id}`)
+
             const inputText = inputBox.val().trim()
 
             if (isInvalidNumber(inputText)) {
@@ -49,9 +50,9 @@
          *         else return null
          */
         function getNumberInput(id) {
-            const inputText = $(`#${id}`).val().trim()
-            if (isInvalidNumber(inputText)) return null
-            return inputText ? parseFloat(inputText) : 0
+            const inputText = $(`#${id}`).val().trim()  // Get input value
+            if (isInvalidNumber(inputText)) return null // If input is invalid, return NULL
+            return inputText ? Number(inputText) : 0    // Otherwise, return the input value as a Number
         }
 
         /* Defining Table
@@ -105,7 +106,7 @@
             $('#mileageInvalidMessage').prop('hidden', true)
 
             const mileage = (finalMiles - initialMiles) / gallons
-            mileageBox.val(mileage)
+            mileageBox.val(mileage.toFixed(2))
         }
 
         /* Defining Table
@@ -124,20 +125,20 @@
     </script>
 
     <meta name="author" content="Jonathan Henson">
-    <title>Template Title</title>
+    <title>Mileage</title>
 </head>
 
 <body>
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
+    <div class="jumbotron jumbotron-fluid" style="background-color: #71a9cc;">
+        <div class="container text-center">
             <h1>Calculate Mileage</h1>
         </div>
     </div>
-    <div class="container-md">
+    <div class="container-md d-flex justify-content-center">
         <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
             <div class="form-group">
-                <label for="initialMilesInput">Initial Odometer Reading:</label>
-                <div class="input-group" id="initialMilesInput">
+                <label for="initialMiles">Initial Odometer Reading:</label>
+                <div class="input-group">
                     <input type="text" placeholder="0" oninput="validateNumberInput('initialMiles')" id="initialMiles"
                         class="form-control">
                     <div class="input-group-append">
@@ -149,8 +150,8 @@
                 </small>
             </div>
             <div class="form-group">
-                <label for="finalMilesInput">Final Odometer Reading:</label>
-                <div class="input-group" id="finalMilesInput">
+                <label for="finalMiles">Final Odometer Reading:</label>
+                <div class="input-group">
                     <input type="text" placeholder="0" oninput="validateNumberInput('finalMiles')" id="finalMiles"
                         class="form-control">
                     <div class="input-group-append">
@@ -162,8 +163,8 @@
                 </small>
             </div>
             <div class="form-group">
-                <label for="gallonsInput">Gasoline Used:</label>
-                <div class="input-group" id="gallonsInput">
+                <label for="gallons">Gasoline Used:</label>
+                <div class="input-group">
                     <input type="text" placeholder="0" oninput="validateNumberInput('gallons')" id="gallons"
                         class="form-control">
                     <div class="input-group-append">
@@ -175,13 +176,13 @@
                 </small>
             </div>
             <div class="clearfix">
-                <button type="button" onclick="reset()" class="btn btn-primary">Reset</button>
-                <button type="button" onclick="calculateMileage()" class="btn btn-primary float-right">Calculate Mileage</button>
+                <button type="button" onclick="reset()" class="btn btn-outline-dark">Reset</button>
+                <button type="button" onclick="calculateMileage()" class="btn btn-outline-dark float-right">Calculate Mileage</button>
             </div>
             <hr>
             <div class="form-group">
-                <label for="mileageOutput">Mileage:</label>
-                <div class="input-group" id="mileageOutput">
+                <label for="mileage">Mileage:</label>
+                <div class="input-group">
                     <input type="text" placeholder="0" id="mileage" disabled class="form-control">
                     <div class="input-group-append">
                         <span class="input-group-text" style="width: 9em;">Miles per Gallon</span>

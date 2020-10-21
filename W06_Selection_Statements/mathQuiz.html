@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let currentOperator;
+
+        /* Defining Table
+         * Input: N/A
+         * Processing: Sets the default value of the operator dropdown
+         * Output: Current operator is set to a default
+         */
+        function onLoad() {
+            operatorDropdownChanged('add')
+        }
+
+        /* Defining Table
+         * Input: The id of the new operator
+         * Processing: Sets the current operator and updates the
+         *     operator dropdown with the new operator
+         * Output: Current operator is set
+         */
+        function operatorDropdownChanged(newOperator) {
+            currentOperator = newOperator
+            const operatorLabel = $(`#${newOperator}`).html()
+            $('#operatorSelectButton').html(operatorLabel)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - operandOne
+         *     - currentOperator
+         *     - operandTwo
+         *     - expectedRightHandSide
+         * Processing: Checks that the inputted calculation results in
+         *     the expected right hand side value
+         * Output: Shows a correct message or an incorrect message.
+         *     Shows nothing if the inputs are invalid
+         */
+        function checkCalculation() {
+            $('#message').prop('hidden', true)
+
+            const operandOne = getNumberInput('operandOne')
+            const operandTwo = getNumberInput('operandTwo')
+            const expectedRightHandSide = getNumberInput('rightHandSide')
+
+            if (operandOne === null || operandTwo === null || rightHandSide === null) {
+                return
+            }
+
+            let actualRightHandSide
+            switch(currentOperator) {
+                case 'add':
+                    actualRightHandSide = operandOne + operandTwo
+                    break
+                case 'sub':
+                    actualRightHandSide = operandOne - operandTwo
+                    break
+                case 'mul':
+                    actualRightHandSide = operandOne * operandTwo
+                    break
+                case 'div':
+                    actualRightHandSide = operandOne / operandTwo
+                    break
+                default:
+                    console.error(`The "${currentOperator}" operator is not supported`)
+                    return
+            }
+
+            const correctAnswer = actualRightHandSide.toFixed(2) == expectedRightHandSide.toFixed(2)
+
+            $('#message').prop('hidden', false)
+            $('#correct').prop('hidden', !correctAnswer)
+            $('#incorrect').prop('hidden', correctAnswer)
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Parses the value of the input box as a number
+         * Output: If the number is valid, return the parsed number,
+         *         else return null
+         */
+         function getNumberInput(id) {
+            validateNumberInput(id)
+            const inputText = $(`#${id}`).val().trim()  // Get input value
+            if (isInvalidNumber(inputText)) return null // If input is invalid, return NULL
+            return inputText ? Number(inputText) : 0    // Otherwise, return the input value as a Number
+        }
+
+        /* Defining Table
+         * Input: A string to be validated
+         * Processing: Checks if the string can be parsed as a number
+         * Output: True or False
+         */
+         function isInvalidNumber(numText) {
+            return isNaN(numText)
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Checks if the text input is a number
+         * Output: Displays an error message and highlights the text box if invalid,
+         *         else removes error text and highlighting
+         */
+         function validateNumberInput(id) {
+            const invalidMessage = $(`#invalidMessage`)
+            const inputBox = $(`#${id}`)
+
+            const inputText = inputBox.val().trim()
+
+            if (isInvalidNumber(inputText)) {
+                inputBox.addClass('is-invalid')
+                invalidMessage.removeClass('invisible')
+                return;
+            }
+            invalidMessage.addClass('invisible')
+            inputBox.removeClass('is-invalid')
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Parses the value of the input box as a number
+         * Output: If the number is valid, return the parsed number,
+         *         else return null
+         */
+        function reset() {
+            $('#operandOne').val('')
+            $('#operandTwo').val('')
+            $('#rightHandSide').val('')
+            validateNumberInput('operandOne')
+            validateNumberInput('operandTwo')
+            validateNumberInput('rightHandSide')
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Maths Quiz</title>
+</head>
+
+<body onload="onLoad()">
+    <div class="jumbotron jumbotron-fluid" style="background-color: #71a9cc;">
+        <div class="container text-center">
+            <h1>Test Your Math Skills!</h1>
+        </div>
+    </div>
+    <div class="container-md">
+        <div class="form-inline justify-content-center">
+            <input type="text" placeholder="0" onchange="validateNumberInput('operandOne')" id="operandOne" class="form-control">
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" id="operatorSelectButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    +
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" id='add' onclick="operatorDropdownChanged('add')">+</button>
+                    <button class="dropdown-item" id='sub' onclick="operatorDropdownChanged('sub')">−</button>
+                    <button class="dropdown-item" id='mul' onclick="operatorDropdownChanged('mul')">×</button>
+                    <button class="dropdown-item" id='div' onclick="operatorDropdownChanged('div')">÷</button>
+                </div>
+            </div>
+            <input type="text" placeholder="0" onchange="validateNumberInput('operandTwo')" id="operandTwo" class="form-control">
+            <label class="pl-3 pr-3">
+                =
+            </label>
+            <input type="text" placeholder="0" onchange="validateNumberInput('rightHandSide')" id="rightHandSide" class="form-control">
+        </div>
+        <div class="d-flex justify-content-center">
+            <small id="invalidMessage" class="text-danger invisible">
+                Please only enter numbers
+            </small>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+            <button type="button" onclick="reset()" class="btn btn-outline-dark mr-3">Reset</button>
+            <button type="button" onclick="checkCalculation()" class="btn btn-outline-dark">Check</button>
+        </div>
+        <div id="message" hidden>
+            <hr>
+            <h1 class="text-center" id="correct" style="color: green;" hidden>Correct! Good job!</h1>
+            <h1 class="text-center" id="incorrect" style="color: red;" hidden>Incorrect! Try again!</h1>
+        </div>
+    </div>
+</body>
+
+</html>

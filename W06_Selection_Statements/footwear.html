@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        .label-inline {
+            width: 25%;
+            text-align: center;
+            font-size: x-large;
+        }
+
+        .image-radio {
+            -webkit-appearance: none;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            filter: grayscale(100%);
+            opacity: 50%;
+            transition: all .2s ease;
+            background-size: cover;
+            margin-bottom: -10%;
+        }
+
+        .image-radio:before {
+            content: "";
+            display: block;
+            padding-top: 100%;
+            /* initial ratio of 1:1*/
+        }
+
+        .image-radio:hover,
+        .image-radio:checked {
+            filter: grayscale(0);
+            opacity: 100%;
+        }
+
+        .image-radio:focus {
+            outline: 0;
+        }
+
+        .hot {
+            background: url('https://openmoji.org/data/color/svg/1F975.svg') center;
+        }
+
+        .rain {
+            background: url('https://openmoji.org/data/color/svg/1F327.svg') center;
+        }
+
+        .snow {
+            background: url('https://openmoji.org/data/color/svg/2603.svg') center;
+        }
+
+        .other {
+            background: url('https://openmoji.org/data/color/svg/2753.svg') center;
+        }
+    </style>
+
+    <script>
+        /* Defining Table
+         * Input: Weather
+         * Processing: Uses a switch to determine which footwear is appropriate for the weather.
+         * Output: Displays the suggested footwear for the weather as a message
+         */
+        function checkFootwear(weather) {
+            const suggestionDiv = $('#suggestionDiv')
+            
+            if (!weather) {
+                suggestionDiv.prop('hidden', true)
+                return
+            }
+
+            let footwear
+            switch (weather.toLowerCase()) {
+                case 'hot':
+                    $('#hotRad')[0].checked = true
+                    footwear = 'Boots'
+                    break
+                case 'rain':
+                case 'raining':
+                case 'rainy':
+                    $('#rainRad')[0].checked = true
+                    footwear = 'Galoshes'
+                    break
+                case 'snow':
+                case 'snowing':
+                case 'snowy':
+                    $('#snowRad')[0].checked = true
+                    footwear = 'Boots'
+                    break
+                default:
+                    $('#otherRad')[0].checked = true
+                    footwear = 'Shoes'
+            }
+
+            $('#chosenWeather').html(weather)
+            $('#suggestedFootwear').html(footwear)
+
+            suggestionDiv.prop('hidden', false)
+        }
+
+        /* Defining Table
+         * Input: checkedRadio
+         * Processing: If the radio button is other, the weather tex bo will be reset.
+         *     If any other radio is checked it will update the weather text box with
+         *     the checked weather radio button's value, then execute checkFootwear()
+         * Output:
+         *     - Updates the weather text box
+         *     - Displays the suggested footwear for the checked radio button.
+         */
+        function checkedWeather() {
+            const checkedRadio = $('input[name="weather"]:checked')
+            const weatherTxt = $('#weatherTxt')
+
+            if (checkedRadio[0].id == 'otherRad') {
+                weatherTxt.val('')
+                checkFootwear('')
+                return
+            }
+
+            const weatherVal = checkedRadio.val()
+            weatherTxt.val(weatherVal)
+
+            checkFootwear(weatherVal)
+        }
+
+        /* Defining Table
+         * Input: Weather textbox value
+         * Processing: Executes the checkFootwear() function with the weather
+         *     texbox value
+         * Output: Displays the suggested footwear for the weather as a message
+         */
+        function changedText() {
+            checkFootwear($('#weatherTxt').val())
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Footwear</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid" style="background-color: #71a9cc;">
+        <div class="container text-center">
+            <h1>What Footwear?!</h1>
+        </div>
+    </div>
+    <div class="text-center">
+        <h2>What is the weather like outside?</h2>
+    </div>
+    <div class="container-md">
+        <div id="weatherOptions" class="d-flex justify-content-center">
+            <label class="label-inline"><input type="radio" name="weather" value="Hot" id="hotRad"
+                    class="image-radio hot" oninput="checkedWeather()">Hot</label>
+            <label class="label-inline"><input type="radio" name="weather" value="Rainy" id="rainRad"
+                    class="image-radio rain" onchange="checkedWeather()">Rainy</label>
+            <label class="label-inline"><input type="radio" name="weather" value="Snowy" id="snowRad"
+                    class="image-radio snow" onchange="checkedWeather()">Snowy</label>
+            <label class="label-inline"><input type="radio" name="weather" value="Other" id="otherRad"
+                    class="image-radio other" onchange="checkedWeather()">Other</label>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="input-group col-11">
+                <input type="text" onchange="changedText()" id="weatherTxt" class="form-control text-center" style="font-size: 2em; font-weight: bold;">
+                <span class="input-group-append">
+                    <button type="button" onclick="changedText()" class="btn btn-outline-secondary"
+                        style="font-size: 2em; color: transparent; text-shadow: 0 0 0 black;">✔️</button>
+                </span>
+            </div>
+        </div>
+        <div id="suggestionDiv" class="text-center" hidden>
+            <hr>
+            <h2>For <span id="chosenWeather" style="font-weight: bold;">X</span> weather,
+                you should wear <span id="suggestedFootwear" style="font-weight: bold;">Y</span></h2>
+        </div>
+    </div>
+</body>
+
+</html>
