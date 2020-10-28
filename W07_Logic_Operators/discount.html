@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const TAX_AMOUNT = 0.06
+        const DISCOUNT_AMOUNT = 0.1
+        const DISCOUNT_DAYS = new Set([2, 3])
+        const DISCOUNT_THRESHOLD = 50
+
+        /* Defining Table
+         * Input:
+         * Processing:
+         * Output:
+         */
+        function calculateNetCost(subtotal) {
+            const dayOfWeek = new Date().getDay()
+
+            let netSubtotal = subtotal
+            if (DISCOUNT_DAYS.has(dayOfWeek) && subtotal > DISCOUNT_THRESHOLD)
+                netSubtotal -= subtotal * DISCOUNT_AMOUNT
+            
+            return netSubtotal * (1 + TAX_AMOUNT)
+        }
+
+        function displayNetCost() {
+            const subtotalBox = $('#subtotal')
+            const invalidMessage = $('#invalidMessage')
+            const subtotalText = subtotalBox.val()
+
+            if (isNaN(subtotalText)) {
+                subtotalBox.addClass('is-invalid')
+                invalidMessage.prop('hidden', false)
+                return
+            }
+            invalidMessage.prop('hidden', true)
+            subtotalBox.removeClass('is-invalid')
+
+            subtotal = Number(subtotalText)
+            netCost = calculateNetCost(subtotal)
+
+            $('#dueAmount').val(netCost.toFixed(2))
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Cost Calculator</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid" style="background-color: #f4a261;">
+        <div class="container text-center">
+            <h1>High-Tech Cost Calculator</h1>
+        </div>
+    </div>
+    <div class="container-md d-flex justify-content-center">
+        <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
+            <div class="form-group">
+                <label for="subtotal">Subtotal Amount:</label>
+                <div class="input-group">
+                    <input type="text" placeholder="0" onchange="displayNetCost()" id="subtotal"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text">USD</span>
+                    </div>
+                </div>
+                <small id="invalidMessage" class="text-danger" hidden>
+                    Must be a number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="dueAmount">Amount Due:</label>
+                <div class="input-group">
+                    <input type="text" placeholder="0" id="dueAmount"
+                        class="form-control" disabled>
+                    <div class="input-group-append">
+                        <span class="input-group-text">USD</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
