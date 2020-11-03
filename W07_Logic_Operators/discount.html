@@ -19,9 +19,13 @@
         const DISCOUNT_THRESHOLD = 50
 
         /* Defining Table
-         * Input:
+         * Input: Subtotal and Day of the Week
          * Processing:
+         *     - If the subtotal is over the DISCOUNT_THRESHOLD and today is listed in DISCOUNT_DAYS,
+         *       subtract a DISCOUNT_AMOUNT percentage of the subtotal
+         *     - After discounts are applied, add a TAX_AMOUNT percentage of the subtotal
          * Output:
+         *     - The Net Cost of the Subtotal after applying any discount and tax
          */
         function calculateNetCost(subtotal) {
             const dayOfWeek = new Date().getDay()
@@ -33,6 +37,16 @@
             return netSubtotal * (1 + TAX_AMOUNT)
         }
 
+        /* Defining Table
+         * Input:
+         *     - Subtotal Input
+         * Processing:
+         *     - Validate if the subtotal input is a valid number
+         *     - Calculates the net total
+         * Output:
+         *     - If the subtotal input is invalid, highlight the input box red and show an error message
+         *     - If the subtotal input is valid, display the net total cost
+         */
         function displayNetCost() {
             const subtotalBox = $('#subtotal')
             const invalidMessage = $('#invalidMessage')

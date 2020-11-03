@@ -161,11 +161,11 @@
                     aria-haspopup="true" aria-expanded="false">
                     +
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <button class="dropdown-item" id='add' onclick="operatorDropdownChanged('add')">+</button>
-                    <button class="dropdown-item" id='sub' onclick="operatorDropdownChanged('sub')">−</button>
-                    <button class="dropdown-item" id='mul' onclick="operatorDropdownChanged('mul')">×</button>
-                    <button class="dropdown-item" id='div' onclick="operatorDropdownChanged('div')">÷</button>
+                <div class="dropdown-menu" aria-labelledby="operatorSelectButton">
+                    <button class="dropdown-item" id='add' onclick="operatorDropdownChanged('add')">&plus;</button>
+                    <button class="dropdown-item" id='sub' onclick="operatorDropdownChanged('sub')">&minus;</button>
+                    <button class="dropdown-item" id='mul' onclick="operatorDropdownChanged('mul')">&times;</button>
+                    <button class="dropdown-item" id='div' onclick="operatorDropdownChanged('div')">&div;</button>
                 </div>
             </div>
             <input type="text" placeholder="0" onchange="validateNumberInput('operandTwo')" id="operandTwo" class="form-control">

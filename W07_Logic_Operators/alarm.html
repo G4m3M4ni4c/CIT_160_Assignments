@@ -25,55 +25,126 @@
 
         .snow {
             background-image: url("https://background-tiles.com/overview/blue/patterns/large/1026.gif");
+            animation: fadeIn ease 2s;
         }
 
+        .lazy,
         .fireworks {
             background-color: black;
             transition: all 1s ease;
         }
 
-        .fireworks img {
+        .lazy #lazy,
+        .fireworks #fireworks {
             display: block;
             transition: all 1s ease;
-            animation: fadeIn ease 1s 0.5s;
+            animation: fadeIn ease 2s 0.5s;
             animation-fill-mode: forwards;
         }
 
-        .fireworks, .snow h1 {
+        .lazy,
+        .fireworks,
+        .snow {
             color: white;
-            font-weight: bolder;
-            animation: fadeIn ease 1s;
-            animation-fill-mode: forwards;
         }
 
         @keyframes fadeIn {
-            0% {opacity:0;}
-            100% {opacity:1;}
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
     </style>
 
     <script>
-        const CHRISTMAS = new Date("2000-12-25").getTime()
-        const NEW_YEAR = new Date("2000-01-01").getTime()
-        const INDEPENDENCE_DAY = new Date("2000-07-04").getTime()
-        const HOLIDAYS = new Set([CHRISTMAS, NEW_YEAR, INDEPENDENCE_DAY])
+        const SLEEP_IN = 'Sleep In'
+        const GET_UP = '&#9200; Get Up! &#9200;'
 
+        const CHRISTMAS = getYearlessDate(12, 25)
+        const NEW_YEAR = getYearlessDate(1, 1)
+        const INDEPENDENCE_DAY = getYearlessDate(7, 4)
+
+        /* Defining Table
+         * Input:
+         *     - Todays Date
+         * Processing:
+         *     - If today is a weekend or holiday then display "Sleep In", otherwise display "Get Up!"
+         *     - If today is christmas show a snowy background
+         *     - If today is new years or independence day show fireworks
+         *     - If today is not a holiday and a weekend show cinderella being lazy
+         * Output:
+         *     - Display a message (and an animation if a holdiay or weekend)
+         */
         function doAlarmStuff() {
-            const now = new Date()
-            const dayOfWeek = now.getDay()
-            const today = new Date(2000, now.getMonth(), now.getDate()).getTime()
-
-            $('#message').html(HOLIDAYS.has(today) || dayOfWeek % 6 == 0 ? "Sleep In" : "Get Up!")
+            const today = new Date()
 
             $('#theButton').prop('hidden', true)
             $('#message').prop('hidden', false)
 
-            if (today == CHRISTMAS) {
-                $('body').addClass('snow')
+            // Default message is Sleep In
+            let message = SLEEP_IN
+
+            if (isSameDayOfYear(today, CHRISTMAS))
+            {
+                $('#background').addClass('snow')
             }
-            if (today == NEW_YEAR || today == INDEPENDENCE_DAY) {
-                $('body').addClass('fireworks')
+            else if (isSameDayOfYear(today, NEW_YEAR) || isSameDayOfYear(today, INDEPENDENCE_DAY))
+            {
+                $('#background').addClass('fireworks')
             }
+            else if (isWeekend(today))
+            {
+                $('#background').addClass('lazy')
+            }
+            else
+            {
+                message = GET_UP // If not holiday or weekend message is Get Up
+            }
+
+            $('#message').html(message)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - date1: First Date
+         *     - date2: Second Date
+         * Processing:
+         *     - Check if the month and day of the month are the same in both dates
+         * Output:
+         *     - `true` if they are the same day of the year, else `false`
+         */
+        function isSameDayOfYear(date1, date2) {
+            return date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth()
+        }
+
+        /* Defining Table
+         * Input:
+         *     - month: Month (1-12)
+         *     - day: Day (1-31)
+         * Processing:
+         *     - Create a Date object using the month and day.
+         *     - The year is a leap year to account for all possible dates.
+         * Output:
+         *     - A new Date object
+         */
+        function getYearlessDate(month, day) {
+            const LEAP_YEAR = 2000
+            return new Date(LEAP_YEAR, month - 1, day)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - date: A Date
+         * Processing:
+         *     - Checks if the Date is a weekend
+         * Output:
+         *     - `true` if a weekend, otherwise `false`
+         */
+        function isWeekend(date) {
+            return date.getDay() % 6 == 0
         }
     </script>
 
@@ -82,13 +153,18 @@
 </head>
 
 <body>
-    <div class="container h-100 d-flex justify-content-center">
-        <div class="my-auto text-center">
-            <img src="https://i.pinimg.com/originals/08/4a/7b/084a7b1df42124ea910e8105bf20b7a3.gif" width="100%">
-            <button id="theButton" type="button" class="btn btn-danger" onclick="doAlarmStuff()">
-                <h1>Click Me!</h1>
-            </button>
-            <h1 id="message" hidden>MESSAGE</h1>
+    <div id="background" class="h-100">
+        <div class="container h-100 d-flex justify-content-center">
+            <div class="my-auto text-center">
+                <img id="fireworks" src="https://i.pinimg.com/originals/08/4a/7b/084a7b1df42124ea910e8105bf20b7a3.gif" alt="Fireworks"
+                width="600">
+                <img id="lazy" src="https://media1.tenor.com/images/ab86e2f0eb883049639d00cf0eca88a9/tenor.gif?itemid=16233788" alt="Cinderella Sleeping In"
+                width="600">
+                <button id="theButton" type="button" class="btn btn-danger" onclick="doAlarmStuff()">
+                    <span class="display-4">Click Me!</span>
+                </button>
+                <div id="message" class="display-1" hidden>SOMETHING BROKE &#128546;</div>
+            </div>
         </div>
     </div>
 </body>
