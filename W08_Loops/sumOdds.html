@@ -93,6 +93,18 @@
         var emergencyBrakes = false
         var running = false
 
+        /* Defining Table
+         * Input:
+         *     - input text box: The terminating number for adding all odd numbers
+         * Processing:
+         *     - Validates the input
+         *         - If Valid then continue
+         *         - If Invalid then highlight invalidate input and exit.
+         *     - Adds up all odd numbers up until the input number
+         * Output:
+         *     - Shows an animation as all the odd numbers are being added up
+         *     - Shows the total of all odd numbers up until the input number
+         */
         async function sumOdd() {
             if (running) return
 
