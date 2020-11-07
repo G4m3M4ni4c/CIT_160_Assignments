@@ -18,10 +18,15 @@
             height: 100%;
         }
 
+        .text-3d,
+        .btn-text-3d {
+            font-size: 150px;
+            font-weight: 800;
+            transform: translate3d(-5px, 9px, 0px);
+        }
+
         .text-3d {
             color: #FF5555 !important;
-            font-size: 200px;
-            font-weight: 900;
             text-shadow: 1px -1px 0px #BB5555,
                 1px -2px 0px #BB5555,
                 2px -3px 0px #BB5555,
@@ -33,13 +38,10 @@
                 5px -9px 0px #BB5555,
                 7px -11px 5px rgba(0,0,0,1),
                 9px -13px 10px rgba(0,0,0,0.5);
-            transform: translate3d(-5px, 9px, 0px);
         }
 
         .btn-text-3d {
             color: #5555ff;
-            font-size: 200px;
-            font-weight: 900;
             text-shadow: 1px -1px 0px #5555BB,
                 1px -2px 0px #5555BB,
                 2px -3px 0px #5555BB,
@@ -51,13 +53,10 @@
                 5px -9px 0px #5555BB,
                 7px -11px 5px rgba(0,0,0,1),
                 9px -13px 10px rgba(0,0,0,0.5);
-            transform: translate3d(-5px, 9px, 0px);
         }
 
         .btn-text-3d:hover {
             color: #5555ff;
-            font-size: 200px;
-            font-weight: 900;
             text-shadow: 2px -2px 10px rgba(0,0,0,1);
             transform: translate3d(0px, 0px, 0px);
         }
@@ -70,8 +69,8 @@
             animation-name: drop;
             animation-timing-function: ease-in-out;
             animation-iteration-count: 1;
-            animation-duration: 0.4s;
             animation-fill-mode: forwards;
+            animation-duration: 0.4s;
         }
 
         @keyframes drop {
@@ -90,7 +89,11 @@
     </style>
 
     <script>
-        var emergencyBrakes = false
+        const STOPPED_MODE = 0
+        const NORMAL_MODE = 1
+        const HYPER_MODE = 2
+
+        var mode = STOPPED_MODE
         var running = false
 
         /* Defining Table
@@ -101,6 +104,8 @@
          *         - If Valid then continue
          *         - If Invalid then highlight invalidate input and exit.
          *     - Adds up all odd numbers up until the input number
+         *     - Updates the Go Button
+         *     - Summation runs at a different speed depending on the current mode
          * Output:
          *     - Shows an animation as all the odd numbers are being added up
          *     - Shows the total of all odd numbers up until the input number
@@ -109,45 +114,106 @@
             if (running) return
 
             const inputBox = $('#input')
-            const droppingNum = $('#droppingNum')
             const outputDiv = $('#output')
             outputDiv.html(0)
 
-            let start = inputBox.val()
-            if (isNaN(start) || start.includes('.') || start <= 0) {
+            let startNum = inputBox.val()
+            if (isNaN(startNum) || startNum.includes('.') || startNum <= 0) {
                 inputBox.addClass('is-invalid')
                 return
             }
             inputBox.removeClass('is-invalid')
 
             running = true
-            emergencyBrakes = false
+            mode = NORMAL_MODE
+            updateGoBtn()
 
-            start = Number(start)
-            if (!(start & 1)) {
-                start--
-                inputBox.val(start)
+            startNum = Number(startNum)
+            if (!(startNum & 1)) {
+                startNum--
+                inputBox.val(startNum)
                 await sleep(200)
             }
             await sleep(200)
-            for (let dropNum = start, sum = dropNum; dropNum > 0; dropNum -= 2, sum += dropNum) {
-                if (emergencyBrakes) {
-                    running = false
-                    return
+            let sum = startNum
+            for (let dropNum = startNum; dropNum > 0; dropNum -= 2, sum += dropNum) {
+                let wait = 0
+                if (mode == NORMAL_MODE) wait = 100
+                else if (mode == HYPER_MODE) wait = 5
+                if (wait) {
+                    setDroppingNum(dropNum)
+                    await sleep(wait)
+                    inputBox.val(dropNum > 1 ? dropNum - 2 : 0)
+                    await sleep(wait)
+                    outputDiv.html(sum)
+                    await sleep(wait * 2)
+                    $('#droppingNum').prop('hidden', true)
+                    await sleep(wait / 2)
                 }
-                droppingNum.html(dropNum)
-                droppingNum.prop('hidden', false)
-                await sleep(100)
-                inputBox.val(dropNum > 1 ? dropNum - 2 : 0)
-                await sleep(100)
-                outputDiv.html(sum)
-                await sleep(200)
-                droppingNum.prop('hidden', true)
-                await sleep(50)
             }
+            inputBox.val(0)
+            outputDiv.html(sum)
             running = false
+            mode = STOPPED_MODE
+            updateGoBtn()
         }
 
+        /* Defining Table
+         * Input:
+         *     - val: Value to set the dropping number to
+         * Processing:
+         *     - Sets the dropping numbers value
+         *     - Removes hidden attribute from div
+         * Output:
+         *     - Shows a dropping number
+         */
+        function setDroppingNum(val) {
+            if (mode != NORMAL_MODE) return
+            const droppingNum = $('#droppingNum')
+            droppingNum.prop('hidden', false)
+            droppingNum.html(val)
+        }
+
+        /* Defining Table
+         * Input: N/A
+         * Processing:
+         *     - Set the Go buttons label based on the current mode
+         *     - Set the Go buttons onclick event delegate based on the current mode
+         * Output:
+         *     - Updates the GO button label and onclick event delegate based on the current mode
+         */
+        function updateGoBtn() {
+            const goBtn = $('#go')
+            goBtn.off('click')
+            switch (mode) {
+                case STOPPED_MODE:
+                    goBtn.html('GO')
+                    goBtn.click(sumOdd)
+                    break
+                case NORMAL_MODE:
+                    goBtn.html('FASTER')
+                    goBtn.click(() => {
+                        mode = HYPER_MODE
+                        updateGoBtn()
+                    })
+                    break
+                case HYPER_MODE:
+                    goBtn.html('FINISH')
+                    goBtn.click(() => {
+                        mode = STOPPED_MODE
+                        updateGoBtn()
+                    })
+            }
+        }
+
+        /* Defining Table
+         * Input:
+         *     - ms: The milliseconds to sleep for
+         * Processing:
+         *     - Creates a promise that resolves after the input milliseconds has passed
+         * Output:
+         *     - A promise that is resolved after the input milliseconds has passed
+         */
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
