@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+    </style>
+
+    <script>
+        /* Defining Table
+         * Input:
+         *     - x_0: Initial value of x
+         *     - x_n: Final value of x
+         * Processing:
+         *     - For every value of x from x_0 to x_n, calculate the xth power of 2
+         *     - Add each power of two to a list
+         *     - Write the list with comma seperators to the document
+         * Output:
+         *     - A comma seperated list of powers of two
+         */
+        function generatePowersOf2(x_0, x_n) {
+            powersOfTwo = []
+            for (let x = x_0; x <= x_n; x++) {
+                powersOfTwo.push(2 ** x)
+            }
+            document.write(powersOfTwo.join(', '))
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Powers of Two</title>
+</head>
+
+<body>
+    <div class="mx-5 my-3 display-3 text-justify">
+        <script>
+            generatePowersOf2(0, 31)
+        </script>
+    </div>
+</body>
+
+</html>
