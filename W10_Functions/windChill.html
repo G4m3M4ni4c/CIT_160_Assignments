@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        /* Defining Table
+         * Input:
+         *     - temperature: The temperature in fahrenheit from the temperature text box
+         *     - windSpeed: The wind speed in miles per hour from the windSpeed text box
+         * Processing:
+         *     - Checks that both inputs are valid, and displays an error if either aren't valid
+         *     - If both inputs are valid then calculates the wind chill factor to 2 d.p.
+         * Output:
+         *     - Displays the wind chill factor in fahrenheit to the windChill text box
+         */
+        function doInputOutput() {
+            const temperature = getNumberInput('temperature')
+            const windSpeed = getNumberInput('windSpeed')
+
+            if (temperature === null || windSpeed === null) {
+                windChillError('Inputs are invalid')
+                return
+            }
+            windChillError(null)
+
+            const windChillFactor = windChill(temperature, windSpeed).toFixed(2)
+            $('#windChill').val(windChillFactor)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - temperature: The Temperature in Fahrenheit
+         *     - windspeed: The Wind Speed in Miles per Hour
+         * Processing:
+         *     - Calculates the North American Wind Chill Factor in Fahrenheit
+         * Output:
+         *     - Returns the Wind Chill Factor in Fahrenheit
+         */
+        function windChill(temperature, windSpeed) {
+            return 35.74 + 0.6215 * temperature - 35.75 * windSpeed ** 0.16 + 0.4275 * temperature * windSpeed ** 0.16
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Parses the value of the input box as a number
+         * Output: If the number is valid, return the parsed number,
+         *         else return null
+         */
+         function getNumberInput(id) {
+            const inputText = $(`#${id}`).val().trim()
+            if (isNaN(inputText)) return null
+            return inputText ? Number(inputText) : 0
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Checks if the text input is a valid positive number
+         * Output: Displays an error message and highlights the text box if invalid,
+         *         else removes error text and highlighting
+         */
+        function validateNumberInput(id) {
+            const invalidMessage = $(`#${id}InvalidMessage`)
+            const inputBox = $(`#${id}`)
+
+            const inputText = inputBox.val().trim()
+
+            if (isNaN(inputText)) {
+                inputBox.addClass('is-invalid')
+                invalidMessage.prop('hidden', false)
+                return;
+            }
+            invalidMessage.prop('hidden', true)
+            inputBox.removeClass('is-invalid')
+        }
+
+        /* Defining Table
+         * Input: An error message
+         * Output: Highlights the wind chill box red and displays
+         *         an error message
+         */
+         function windChillError(message) {
+            const windChill = $('#windChill')
+            const windChillErrorBox = $('#windChillInvalidMessage')
+
+            if (message === null) {
+                windChill.removeClass('is-invalid')
+                windChillErrorBox.prop('hidden', true)
+                return
+            }
+
+            windChill.addClass('is-invalid')
+            windChill.val('Error')
+            windChillErrorBox.prop('hidden', false)
+            windChillErrorBox.html(message)
+        }
+
+        /* Defining Table
+         * Input: N/A
+         * Processing: N/A
+         * Output: Resets the form inputs
+         */
+         function reset() {
+            $('#temperature').val('')
+            $('#windSpeed').val('')
+            validateNumberInput('temperature')
+            validateNumberInput('windSpeed')
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Wind Chill Calculator</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid" style="background-color: #71a9cc;">
+        <div class="container text-center">
+            <h1>Calculate Wind Chill</h1>
+        </div>
+    </div>
+    <div class="container-md d-flex justify-content-center">
+        <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
+            <div class="form-group">
+                <label for="temperature">Temperature:</label>
+                <div class="input-group">
+                    <input type="text" placeholder="0" oninput="validateNumberInput('temperature')" id="temperature"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">Fahrenheit</span>
+                    </div>
+                </div>
+                <small id="temperatureInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="windSpeed">Wind Speed:</label>
+                <div class="input-group">
+                    <input type="text" placeholder="0" oninput="validateNumberInput('windSpeed')" id="windSpeed"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">Miles per Hour</span>
+                    </div>
+                </div>
+                <small id="windSpeedInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="clearfix">
+                <button type="button" onclick="reset()" class="btn btn-outline-dark">Reset</button>
+                <button type="button" onclick="doInputOutput()" class="btn btn-outline-dark float-right">Wind Chill</button>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="windChill">Wind Chill:</label>
+                <div class="input-group">
+                    <input type="text" placeholder="0" id="windChill" disabled class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">Fahrenheit</span>
+                    </div>
+                </div>
+                <small id="windChillInvalidMessage" class="text-danger" hidden>
+                    Error: No Error
+                </small>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
