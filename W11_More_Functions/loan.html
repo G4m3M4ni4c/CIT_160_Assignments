@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        /* Defining Table
+         * Input:
+         *     - principal: The loan amount
+         *     - annualRate: The the annual interest rate
+         *     - years: The number of years to payoff the loan
+         *     - periodsPerYear: The number of periods per year where interest is applied
+         * Processing:
+         *     - Checks that all inputs are valid, and displays an error if any aren't valid
+         *     - If all inputs are valid then calculate and display the payment per period
+         * Output:
+         *     - Displays the payment per period to the payment text box
+         */
+        function doPayment() {
+            const principal = getNumberInput('principal')
+            const annualRate = getNumberInput('annualRate')
+            const years = getNumberInput('years')
+            const periodsPerYear = getNumberInput('periodsPerYear')
+
+            if (principal === null || annualRate === null || years == null || periodsPerYear == null) {
+                showError('payment', 'Inputs are invalid')
+                return
+            }
+            showError('payment', null)
+
+            const payment = computePayment(principal, annualRate, years, periodsPerYear).toFixed(2)
+            $('#payment').val(payment)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - principal: The loan amount
+         *     - annualRate: The the annual interest rate
+         *     - years: The number of years to payoff the loan
+         *     - periodsPerYear: The number of periods per year where interest is applied
+         *     - numberOfPaymentPaidToDate: The number of payments already paid off
+         * Processing:
+         *     - Checks that all inputs are valid, and displays an error if any aren't valid
+         *     - If all inputs are valid then calculate and display the remaining balance on the loan
+         * Output:
+         *     - Displays the remaining balance on the loan to the balance text box
+         */
+         function doBalance() {
+            const principal = getNumberInput('principal')
+            const annualRate = getNumberInput('annualRate')
+            const years = getNumberInput('years')
+            const periodsPerYear = getNumberInput('periodsPerYear')
+            const numberOfPaymentPaidToDate = getNumberInput('numberOfPaymentPaidToDate')
+
+            if (principal === null || annualRate === null || years === null || periodsPerYear === null || numberOfPaymentPaidToDate === null) {
+                showError('balance', 'Inputs are invalid')
+                return
+            }
+            showError('balance', null)
+
+            const balance = computeBalance(principal, annualRate, years, periodsPerYear, numberOfPaymentPaidToDate).toFixed(2)
+            $('#balance').val(balance)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - principal: The investment amount
+         *     - annualRate: The the annual interest rate
+         *     - years: The number of years to invest
+         *     - periodsPerYear: The number of periods per year where interest is applied
+         * Processing:
+         *     - Calculates the payment per period
+         * Output:
+         *     - Returns the payment per period
+         */
+        function computePayment(principal, annualRate, years, periodsPerYear) {
+            const rate = annualRate / periodsPerYear
+            const periods = years * periodsPerYear
+            const payment = principal * rate / (1 - (1 + rate) ** -periods)
+            return Math.round(payment * 100) / 100
+        }
+
+        /* Defining Table
+         * Input:
+         *     - principal: The investment amount
+         *     - annualRate: The the annual interest rate
+         *     - years: The number of years to invest
+         *     - periodsPerYear: The number of periods per year where interest is applied
+         *     - numberOfPaymentPaidToDate: The number of payments already paid off
+         * Processing:
+         *     - Calculates the remaining balance on the loan
+         * Output:
+         *     - Returns the remaining balance on the loan
+         */
+         function computeBalance(principal, annualRate, years, periodsPerYear, numberOfPaymentPaidToDate) {
+            const rate = annualRate / periodsPerYear
+            const payment = computePayment(principal, annualRate, years, periodsPerYear)
+            const s1 = principal * (1 + rate) ** numberOfPaymentPaidToDate
+            const s2 = payment * ((1 + rate) ** numberOfPaymentPaidToDate - 1) / rate
+            const balance = s1 - s2
+            return Math.round(balance * 100) / 100
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Parses the value of the input box as a number
+         * Output: If the number is valid, return the parsed number,
+         *         else return null
+         */
+         function getNumberInput(id) {
+            const inputText = $(`#${id}`).val().trim()
+            if (isNaN(inputText) || inputText.includes('-')) return null
+            return inputText ? Number(inputText) : 0
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Checks if the text input is a valid positive number
+         * Output: Displays an error message and highlights the text box if invalid,
+         *         else removes error text and highlighting
+         */
+        function validateNumberInput(id) {
+            const invalidMessage = $(`#${id}InvalidMessage`)
+            const inputBox = $(`#${id}`)
+
+            const inputText = inputBox.val().trim()
+
+            if (isNaN(inputText) || inputText.includes('-')) {
+                inputBox.addClass('is-invalid')
+                invalidMessage.prop('hidden', false)
+                return;
+            }
+            invalidMessage.prop('hidden', true)
+            inputBox.removeClass('is-invalid')
+        }
+
+        /* Defining Table
+         * Input:
+         *     - id: Id attribute of a text input box
+         *     - message: An error message
+         * Output: Highlights the input box red and displays
+         *         an error message
+         */
+         function showError(id, message) {
+            const inputBox = $(`#${id}`)
+            const errorBox = $(`#${id}InvalidMessage`)
+
+            if (message === null) {
+                inputBox.removeClass('is-invalid')
+                errorBox.prop('hidden', true)
+                return
+            }
+
+            inputBox.addClass('is-invalid')
+            inputBox.val('Error')
+            errorBox.prop('hidden', false)
+            errorBox.html(message)
+        }
+
+        /* Defining Table
+         * Input: N/A
+         * Processing: N/A
+         * Output: Resets the form inputs
+         */
+         function reset() {
+            $('#principal').val('')
+            $('#annualRate').val('')
+            $('#years').val('')
+            $('#periodsPerYear').val('')
+            validateNumberInput('principal')
+            validateNumberInput('annualRate')
+            validateNumberInput('years')
+            validateNumberInput('periodsPerYear')
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Loan Calculator</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid" style="background-color: #71cc79;">
+        <div class="container text-center">
+            <h1>Loan Calculator</h1>
+        </div>
+    </div>
+    <div class="container-md d-flex justify-content-center">
+        <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
+            <div class="form-group">
+                <label for="principal">Amount Invested (principal):</label>
+                <div class="input-group">
+                    <input type="text" placeholder="0" oninput="validateNumberInput('principal')" id="principal"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">USD</span>
+                    </div>
+                </div>
+                <small id="principalInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="annualRate">Annual Rate (example: .08):</label>
+                <input type="text" placeholder="0" oninput="validateNumberInput('annualRate')" id="annualRate"
+                    class="form-control">
+                <small id="annualRateInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="annualRate">Number of Years:</label>
+                <input type="text" placeholder="0" oninput="validateNumberInput('years')" id="years"
+                    class="form-control">
+                <small id="yearsInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="periodsPerYear">Periods per Year:</label>
+                <input type="text" placeholder="0" oninput="validateNumberInput('periodsPerYear')" id="periodsPerYear"
+                    class="form-control">
+                <small id="periodsPerYearInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="clearfix">
+                <button type="button" onclick="reset()" class="btn btn-outline-dark">Reset</button>
+                <button type="button" onclick="doPayment()" class="btn btn-outline-dark float-right">Compute Payment</button>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="payment">Payment:</label>
+                <div class="input-group">
+                    <input type="text" style="color: black;" placeholder="0" id="payment" disabled class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">USD</span>
+                    </div>
+                </div>
+                <small id="paymentInvalidMessage" class="text-danger" hidden>
+                    Error: No Error
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="numberOfPaymentPaidToDate">Number of Payments Paid to Date:</label>
+                <input type="text" placeholder="0" oninput="validateNumberInput('numberOfPaymentPaidToDate')" id="numberOfPaymentPaidToDate"
+                    class="form-control">
+                <small id="numberOfPaymentPaidToDateInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="clearfix">
+                <button type="button" onclick="reset()" class="btn btn-outline-dark">Reset</button>
+                <button type="button" onclick="doPayment(); doBalance()" class="btn btn-outline-dark float-right">Compute Payoff Amount</button>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="balance">Payoff Amount:</label>
+                <div class="input-group">
+                    <input type="text" style="color: black;" placeholder="0" id="balance" disabled class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">USD</span>
+                    </div>
+                </div>
+                <small id="balanceInvalidMessage" class="text-danger" hidden>
+                    Error: No Error
+                </small>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

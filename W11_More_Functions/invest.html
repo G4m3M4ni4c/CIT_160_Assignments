@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Setup Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        /* Defining Table
+         * Input:
+         *     - principal: The investment amount
+         *     - annualRate: The the annual interest rate
+         *     - years: The number of years to invest
+         *     - periodsPerYear: The number of periods per year where interest is applied
+         * Processing:
+         *     - Checks that all inputs are valid, and displays an error if any aren't valid
+         *     - If all inputs are valid then calculate and display the future balance
+         * Output:
+         *     - Displays the future balance to the futureValue text box
+         */
+        function doFV() {
+            const principal = getNumberInput('principal')
+            const annualRate = getNumberInput('annualRate')
+            const years = getNumberInput('years')
+            const periodsPerYear = getNumberInput('periodsPerYear')
+
+            if (principal === null || annualRate === null || years === null || periodsPerYear === null) {
+                futureValueError('Inputs are invalid')
+                return
+            }
+            futureValueError(null)
+
+            const futureValue = computeFutureValue(principal, annualRate, years, periodsPerYear).toFixed(2)
+            $('#futureValue').val(futureValue)
+        }
+
+        /* Defining Table
+         * Input:
+         *     - principal: The investment amount
+         *     - annualRate: The the annual interest rate
+         *     - years: The number of years to invest
+         *     - periodsPerYear: The number of periods per year where interest is applied
+         * Processing:
+         *     - Calculates the future balance
+         * Output:
+         *     - Returns the future balance
+         */
+        function computeFutureValue(principal, annualRate, years, periodsPerYear) {
+            const rate = annualRate / periodsPerYear
+            const periods = years * periodsPerYear
+            return principal * (1 + rate) ** periods
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Parses the value of the input box as a number
+         * Output: If the number is valid, return the parsed number,
+         *         else return null
+         */
+         function getNumberInput(id) {
+            const inputText = $(`#${id}`).val().trim()
+            if (isNaN(inputText) || inputText.includes('-')) return null
+            return inputText ? Number(inputText) : 0
+        }
+
+        /* Defining Table
+         * Input: Id attribute of a text input box
+         * Processing: Checks if the text input is a valid positive number
+         * Output: Displays an error message and highlights the text box if invalid,
+         *         else removes error text and highlighting
+         */
+        function validateNumberInput(id) {
+            const invalidMessage = $(`#${id}InvalidMessage`)
+            const inputBox = $(`#${id}`)
+
+            const inputText = inputBox.val().trim()
+
+            if (isNaN(inputText) || inputText.includes('-')) {
+                inputBox.addClass('is-invalid')
+                invalidMessage.prop('hidden', false)
+                return;
+            }
+            invalidMessage.prop('hidden', true)
+            inputBox.removeClass('is-invalid')
+        }
+
+        /* Defining Table
+         * Input: An error message
+         * Output: Highlights the futureValue input box red and displays
+         *         an error message
+         */
+         function futureValueError(message) {
+            const futureValue = $('#futureValue')
+            const futureValueErrorBox = $('#futureValueInvalidMessage')
+
+            if (message === null) {
+                futureValue.removeClass('is-invalid')
+                futureValueErrorBox.prop('hidden', true)
+                return
+            }
+
+            futureValue.addClass('is-invalid')
+            futureValue.val('Error')
+            futureValueErrorBox.prop('hidden', false)
+            futureValueErrorBox.html(message)
+        }
+
+        /* Defining Table
+         * Input: N/A
+         * Processing: N/A
+         * Output: Resets the form inputs
+         */
+         function reset() {
+            $('#principal').val('')
+            $('#annualRate').val('')
+            $('#years').val('')
+            $('#periodsPerYear').val('')
+            validateNumberInput('principal')
+            validateNumberInput('annualRate')
+            validateNumberInput('years')
+            validateNumberInput('periodsPerYear')
+        }
+    </script>
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Investment Calculator</title>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid" style="background-color: #cc7171;">
+        <div class="container text-center">
+            <h1>Investment Calculator</h1>
+        </div>
+    </div>
+    <div class="container-md d-flex justify-content-center">
+        <div class="mb-3 col-sm-9 col-md-7 col-lg-5">
+            <div class="form-group">
+                <label for="principal">Amount Invested (principal):</label>
+                <div class="input-group">
+                    <input type="text" placeholder="0" oninput="validateNumberInput('principal')" id="principal"
+                        class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">USD</span>
+                    </div>
+                </div>
+                <small id="principalInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="annualRate">Annual Rate (example: .08):</label>
+                <input type="text" placeholder="0" oninput="validateNumberInput('annualRate')" id="annualRate"
+                    class="form-control">
+                <small id="annualRateInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="annualRate">Number of Years:</label>
+                <input type="text" placeholder="0" oninput="validateNumberInput('years')" id="years"
+                    class="form-control">
+                <small id="yearsInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="periodsPerYear">Periods per Year:</label>
+                <input type="text" placeholder="0" oninput="validateNumberInput('periodsPerYear')" id="periodsPerYear"
+                    class="form-control">
+                <small id="periodsPerYearInvalidMessage" class="text-danger" hidden>
+                    Must be a positive number!
+                </small>
+            </div>
+            <div class="clearfix">
+                <button type="button" onclick="reset()" class="btn btn-outline-dark">Reset</button>
+                <button type="button" onclick="doFV()" class="btn btn-outline-dark float-right">Compute Future Value</button>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="futureValue">Future Value:</label>
+                <div class="input-group">
+                    <input type="text" style="color: black;" placeholder="0" id="futureValue" disabled class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="width: 9em;">USD</span>
+                    </div>
+                </div>
+                <small id="futureValueInvalidMessage" class="text-danger" hidden>
+                    Error: No Error
+                </small>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
