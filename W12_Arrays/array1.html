@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>Array Functions</title>
+<script>
+/* Defining Table
+ * Input: no user input
+ * Processing: Test the addEnds and getMiddle functions by calling them.
+ * Output: The values returned from the addEnds and getMiddle functions.
+ */
+function test() {
+    let list1 = [ 17, 8, 9, 5, 20 ];
+    let list2 = [ 12, 4, 8, 15, 17, 5, 20, 11 ];
+
+    // Test the addEnds function by calling it two times.
+    let sum1 = addEnds(list1);
+    let sum2 = addEnds(list2);
+
+    // Test the getMiddle function by calling it two times.
+    let mid1 = getMiddle(list1);
+    let mid2 = getMiddle(list2);
+
+    // Build a string to display to the user.
+    let output =
+            sum1 + '<br>' +
+            sum2 + '<br>' +
+            mid1 + '<br>' +
+            mid2;
+
+    // Display the output string for the user to see.
+    document.getElementById('output').innerHTML = output;
+}
+
+/* Defining Table
+ * Input: An array of numbers
+ * Processing: Adds the first and last elements of the array
+ * Output: The sum of the first and last elements of the array
+ */
+function addEnds(list) {
+    return list[0] + list[list.length - 1]
+}
+
+/* Defining Table
+ * Input: An array of numbers
+ * Processing: Return the middle element if the array has an odd number of elements,
+ *     otherwise return the average of the 2 middle elements.
+ * Output: The middle value of the array (averaged if array has an even length)
+ */
+function getMiddle(list) {
+    const middle = list.length >> 1
+    if (list.length & 1) return list[middle]
+    else return (list[middle - 1] + list[middle]) / 2
+}
+</script>
+</head>
+
+<body>
+<button type="button" onclick="test()">Test</button>
+<div id="output"></div>
+</body>
+</html>
