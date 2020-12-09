@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <!--Ensures that touchscreens are supported-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="author" content="Jonathan Henson">
+    <title>Array Functions</title>
+    <script>
+        /* Defining Table
+         * Input: no user input
+         * Processing: Test the countEvens and multiply functions by calling them.
+         * Output: The values returned from the countEvens and multiply functions.
+         */
+        function test() {
+            let list1 = [17, 8, 9, 5, 20];
+            let list2 = [12, 4, 8, 15, 17, 5, 20, 11];
+
+            // Test the countEvens function by calling it two times.
+            let count1 = countEvens(list1);
+            let count2 = countEvens(list2);
+
+            // Test the multiply function by calling it two times.
+            let mult1 = multiply(list1, 3);
+            let mult2 = multiply(list2, 2);
+
+            // Build a string to display to the user.
+            let output = `
+            <ol>
+                <li><pre>countEvens(${listToString(list1)}) = ${count1}</pre></li>
+                <li><pre>countEvens(${listToString(list2)}) = ${count2}</pre></li>
+                <li><pre>multiply(${listToString(list1)}, 3) = ${listToString(mult1)}</pre></li>
+                <li><pre>multiply(${listToString(list2)}, 2) = ${listToString(mult2)}</pre></li>
+            </ol>
+            `
+
+            // Display the output string for the user to see.
+            document.getElementById('output').innerHTML = output;
+            document.getElementById('button').remove()
+        }
+
+        /* Defining Table
+         * Input: An array of values
+         * Processing: aggregates the array into a string representation
+         * Output: The array as a string
+         */
+        function listToString(list) {
+            return `[${list.reduce((a, b) => `${a}, ${b}`)}]`
+        }
+
+        /* Defining Table
+         * Input: An array of numbers
+         * Processing: Calculates the count of even elements by:
+         *     subtracting 1, for every odd element, from the total number of elements
+         * Output: The number of even elements in the array
+         */
+        function countEvens(list) {
+            return list.reduce((prev, curr) => prev -= curr & 1, list.length)
+        }
+
+        /* Defining Table
+         * Input:
+         *     list: An array of numbers
+         *     multiplier: The number to multiply each element by
+         * Processing: Creates a new array by multiplying each element by the multiplier
+         * Output: A list where each element a product of the original element and the multiplier
+         */
+        function multiply(list, multiplier) {
+            return list.map((n) => n * multiplier)
+        }
+    </script>
+    <style>
+        .panel {
+            border: 3px solid black;
+            border-radius: 10px;
+            margin: auto;
+            margin-top: 5em;
+            width: fit-content;
+            height: fit-content;
+            padding: 5rem;
+        }
+
+        .fancy-btn {
+            display: inline-block;
+            border: none;
+            text-decoration: none;
+            background: transparent;
+            font-family: sans-serif;
+            font-size: 5rem;
+            cursor: pointer;
+            text-align: center;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .fancy-btn:hover,
+        .fancy-btn:focus {
+            color: cadetblue;
+        }
+    </style>
+</head>
+
+<body style="height: 100%">
+    <div class="panel">
+        <div id="output"></div>
+        <button id="button" class="fancy-btn" type="button" onclick="test()">Test</button>
+    </div>
+</body>
+
+</html>
